@@ -48,9 +48,26 @@ pip install -r requirements.txt
 
 The local task evaluates the model's ability to select the correct intermediate panel (B) given a preceding panel (A) and a following panel (C) from multiple candidates.
 
-| Model | Top-1 | R@3 | R@5 | R@10 | MRR | Avg R |
-|-------|-------|-----|-----|------|-----|-------|
-| Student | 87.27 | 92.50 | 96.20 | 100.00 | 0.88 | 1.65 |
+<table>
+<tr>
+<th>Model</th>
+<th>Top-1</th>
+<th>R@3</th>
+<th>R@5</th>
+<th>R@10</th>
+<th>MRR</th>
+<th>Avg R</th>
+</tr>
+<tr>
+<td>Student</td>
+<td>87.27</td>
+<td>92.50</td>
+<td>96.20</td>
+<td>100.00</td>
+<td>0.88</td>
+<td>1.65</td>
+</tr>
+</table>
 
 Our full model achieves 87.27% top-1 accuracy, meaning it correctly identifies the true middle panel in nearly 87% of test cases. The model demonstrates strong retrieval performance, with 92.50% of correct answers appearing in the top-3 candidates and 96.20% in the top-5 candidates. The MRR of 0.88 and average rank of 1.65 indicate that the model consistently ranks the correct answer near the top of the candidate list.
 
@@ -60,9 +77,20 @@ Our full model achieves 87.27% top-1 accuracy, meaning it correctly identifies t
 
 The global task evaluates the model's ability to restore the correct order of a shuffled set of panels. We use greedy search to find the sequence that maximizes the total score across all adjacent triplets.
 
-| Model (Algorithm) | Perfect (%) | Adj. Pair (%) | Kendall's τ |
-|-------------------|------------|---------------|-------------|
-| Student (Greedy) | 72.00 | 88.00 | 0.91 |
+<table>
+<tr>
+<th>Model (Algorithm)</th>
+<th>Perfect (%)</th>
+<th>Adj. Pair (%)</th>
+<th>Kendall's τ</th>
+</tr>
+<tr>
+<td>Student (Greedy)</td>
+<td>72.00</td>
+<td>88.00</td>
+<td>0.91</td>
+</tr>
+</table>
 
 Our model achieves 72.00% perfect match accuracy, meaning it correctly restores the complete panel sequence for 72 out of 100 test pages. The adjacent pair accuracy of 88.00% indicates that the vast majority of adjacent panel pairs are correctly ordered, demonstrating strong local sequential understanding. The Kendall's tau correlation of 0.91 shows a very strong positive correlation between the predicted and ground truth orderings, demonstrating that the model effectively captures meaningful sequential relationships despite the challenge of global optimization.
 
@@ -74,12 +102,48 @@ To analyze the contribution of each training stage, we evaluate models trained a
 
 **Local Task:**
 
-| Model | Top-1 | R@3 | R@5 | MRR | Avg R |
-|-------|-------|-----|-----|-----|-------|
-| InfoNCE | 51.58 | 79.96 | 91.02 | 0.68 | 2.31 |
-| Infilling | 61.53 | 82.20 | 92.15 | 0.70 | 2.20 |
-| GAN | 84.38 | 90.25 | 95.10 | 0.85 | 1.80 |
-| **Student*** | **87.27** | **92.50** | **96.20** | **0.88** | **1.65** |
+<table>
+<tr>
+<th>Model</th>
+<th>Top-1</th>
+<th>R@3</th>
+<th>R@5</th>
+<th>MRR</th>
+<th>Avg R</th>
+</tr>
+<tr>
+<td>InfoNCE</td>
+<td>51.58</td>
+<td>79.96</td>
+<td>91.02</td>
+<td>0.68</td>
+<td>2.31</td>
+</tr>
+<tr>
+<td>Infilling</td>
+<td>61.53</td>
+<td>82.20</td>
+<td>92.15</td>
+<td>0.70</td>
+<td>2.20</td>
+</tr>
+<tr>
+<td>GAN</td>
+<td>84.38</td>
+<td>90.25</td>
+<td>95.10</td>
+<td>0.85</td>
+<td>1.80</td>
+</tr>
+<tr>
+<td><strong>Student*</strong></td>
+<td><strong>87.27</strong></td>
+<td><strong>92.50</strong></td>
+<td><strong>96.20</strong></td>
+<td><strong>0.88</strong></td>
+<td><strong>1.65</strong></td>
+</tr>
+</table>
 
 The infilling generator (61.53% top-1 accuracy) improves upon the InfoNCE baseline (51.58%), demonstrating that the learned infilling approach is more effective than simple average embedding for panel selection. The GAN stage significantly improves performance over the infilling generator alone (61.53% → 84.38%), demonstrating the effectiveness of adversarial training in improving embedding quality. Knowledge distillation provides additional improvement (84.38% → 87.27%), showing that the coherence scores learned from the teacher model contribute to better panel selection.
 
@@ -87,12 +151,38 @@ The infilling generator (61.53% top-1 accuracy) improves upon the InfoNCE baseli
 
 **Global Task:**
 
-| Model | Perfect (%) | Adj. Pair (%) | Kendall's τ |
-|-------|------------|---------------|-------------|
-| InfoNCE | 13.00 | 25.67 | 0.51 |
-| Infilling | 20.15 | 35.75 | 0.58 |
-| GAN | 50.25 | 65.50 | 0.75 |
-| **Student*** | **72.00** | **88.00** | **0.91** |
+<table>
+<tr>
+<th>Model</th>
+<th>Perfect (%)</th>
+<th>Adj. Pair (%)</th>
+<th>Kendall's τ</th>
+</tr>
+<tr>
+<td>InfoNCE</td>
+<td>13.00</td>
+<td>25.67</td>
+<td>0.51</td>
+</tr>
+<tr>
+<td>Infilling</td>
+<td>20.15</td>
+<td>35.75</td>
+<td>0.58</td>
+</tr>
+<tr>
+<td>GAN</td>
+<td>50.25</td>
+<td>65.50</td>
+<td>0.75</td>
+</tr>
+<tr>
+<td><strong>Student*</strong></td>
+<td><strong>72.00</strong></td>
+<td><strong>88.00</strong></td>
+<td><strong>0.91</strong></td>
+</tr>
+</table>
 
 On the global task, our full model achieves the best performance (72.00% perfect match, 0.91 Kendall's tau), significantly outperforming InfoNCE (13.00% perfect match, 0.51 Kendall's tau). The global task is more challenging as it requires considering the entire sequence context, and the search algorithm choice (greedy vs. beam search) also affects performance. We use greedy search for all evaluations to ensure fair comparison across different model stages.
 
@@ -102,12 +192,48 @@ On the global task, our full model achieves the best performance (72.00% perfect
 
 To further analyze the contribution of individual components, we conduct component removal experiments.
 
-| Variant | Top-1 | R@3 | R@5 | MRR | Avg R |
-|---------|-------|-----|-----|-----|-------|
-| **Full Model*** | **87.27** | **92.50** | **96.20** | **0.88** | **1.65** |
-| w/o Text | 39.84 | 71.66 | 86.27 | 0.59 | 2.80 |
-| w/o GAN | 61.53 | 82.20 | 92.15 | 0.70 | 2.20 |
-| w/o Distill. | 84.38 | 90.25 | 95.10 | 0.85 | 1.80 |
+<table>
+<tr>
+<th>Variant</th>
+<th>Top-1</th>
+<th>R@3</th>
+<th>R@5</th>
+<th>MRR</th>
+<th>Avg R</th>
+</tr>
+<tr>
+<td><strong>Full Model*</strong></td>
+<td><strong>87.27</strong></td>
+<td><strong>92.50</strong></td>
+<td><strong>96.20</strong></td>
+<td><strong>0.88</strong></td>
+<td><strong>1.65</strong></td>
+</tr>
+<tr>
+<td>w/o Text</td>
+<td>39.84</td>
+<td>71.66</td>
+<td>86.27</td>
+<td>0.59</td>
+<td>2.80</td>
+</tr>
+<tr>
+<td>w/o GAN</td>
+<td>61.53</td>
+<td>82.20</td>
+<td>92.15</td>
+<td>0.70</td>
+<td>2.20</td>
+</tr>
+<tr>
+<td>w/o Distill.</td>
+<td>84.38</td>
+<td>90.25</td>
+<td>95.10</td>
+<td>0.85</td>
+<td>1.80</td>
+</tr>
+</table>
 
 Removing the text encoder (using only visual features) results in a significant drop in top-1 accuracy (87.27% → 39.84%), demonstrating that textual content provides valuable narrative cues for panel ordering. Removing GAN training results in a performance drop (87.27% → 61.53%), showing that adversarial training is crucial for generating high-quality embeddings. Removing score distillation also results in a performance drop (87.27% → 84.38%), indicating that knowledge distillation from the teacher model contributes to the model's performance. The full model with all components achieves the best performance, confirming that each component plays an important role in the overall framework.
 
