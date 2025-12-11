@@ -1,0 +1,161 @@
+# Visual Narrative Understanding System Configuration
+
+# Data Paths
+data:
+  # 444 high-quality subset
+  metadata_444: "data/processed_444_pages/panel_metadata.csv"
+  panels_444: "data/processed_444_pages/cropped_panels"
+  triplets_444: "data/processed_444_pages/triplets_444.json"
+  
+  # Large dataset (1.2M panels)
+  metadata_large: "~/data/processed_large_dataset/panel_order_metadata.csv"
+  panels_large: "~/data/raw_panel_images"
+  triplets_large: "~/data/triplets_large.json"
+  
+  # OCR data
+  ocr_file: "data/COMICS_ocr_file.csv"
+  
+  # Output paths
+  output_dir: "data/processed"
+  checkpoints_dir: "checkpoints"
+  results_dir: "results"
+
+# Model Architecture
+model:
+  # Multimodal Encoder
+  encoder:
+    image_encoder: "resnet50"  # ResNet-50
+    image_dim: 512
+    text_encoder: "distilbert-base-uncased"  # DistilBERT
+    text_dim: 512
+    fusion_dim: 128  # Final panel embedding dimension
+    dropout: 0.1
+  
+  # Infilling Generator
+  generator:
+    hidden_dims: [256, 128]  # MLP layers
+    activation: "relu"
+    dropout: 0.1
+  
+  # GAN Discriminator
+  discriminator:
+    hidden_dims: [256, 128, 64]  # MLP layers
+    activation: "leaky_relu"
+    dropout: 0.2
+    use_spectral_norm: true
+  
+  # Coherence Head
+  coherence_head:
+    hidden_dims: [256, 128]  # MLP layers
+    activation: "relu"
+    output_dim: 1  # Score [0, 1]
+  
+  # Rationale Decoder
+  rationale_decoder:
+    type: "transformer"  # or "lstm"
+    hidden_dim: 256
+    num_layers: 2
+    num_heads: 4
+    vocab_size: 10000  # Will be determined from tokenizer
+    max_length: 128
+
+# Training Hyperparameters
+training:
+  # InfoNCE
+  infonce:
+    batch_size: 256
+    learning_rate: 1e-4
+    num_epochs: 20
+    temperature: 0.07
+    num_negatives: 16  # Hard negatives per positive
+  
+  # Infilling
+  infilling:
+    batch_size: 256
+    learning_rate: 1e-4
+    num_epochs: 30
+    recon_loss_weight: 1.0
+  
+  # GAN
+  gan:
+    batch_size: 256
+    generator_lr: 1e-4
+    discriminator_lr: 1e-4
+    num_epochs: 50
+    d_steps: 1  # Discriminator steps per generator step
+    g_steps: 1
+    use_gradient_penalty: true
+    gradient_penalty_weight: 10.0
+  
+  # Distillation
+  distillation:
+    batch_size: 128
+    learning_rate: 5e-5
+    num_epochs: 20
+    teacher_temperature: 3.0  # For soft labels
+  
+  # Combined Loss Weights
+  loss_weights:
+    lambda_recon: 1.0
+    lambda_gan: 0.1
+    lambda_nce: 0.5
+    lambda_score: 1.0
+    lambda_rationale: 0.5
+  
+  # Optimizer
+  optimizer: "adam"
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  weight_decay: 1e-5
+  
+  # Learning Rate Schedule
+  lr_schedule:
+    type: "cosine"  # or "step", "plateau"
+    warmup_epochs: 2
+    min_lr: 1e-6
+
+# Teacher VLM (Qwen2.5-VL-3B)
+teacher:
+  model_name: "Qwen/Qwen2.5-VL-3B-Instruct"
+  use_api: false  # If true, use API; if false, load locally
+  api_key: ""  # If using API
+  max_new_tokens: 128
+  temperature: 0.7
+  batch_size: 8  # For API calls
+
+# Evaluation
+evaluation:
+  # Local Task (Middle Panel Selection)
+  local:
+    batch_size: 128
+    num_candidates: 100  # Number of candidate B panels
+    alpha: 0.7  # Weight for infilling similarity
+    beta: 0.3   # Weight for coherence score
+    metrics: ["top1_accuracy", "recall@k", "mrr"]
+    recall_k: [3, 5, 10]
+  
+  # Global Task (Panel Ordering)
+  global:
+    algorithm: "beam_search"  # or "greedy", "local_search"
+    beam_width: 10
+    max_iterations: 1000
+    metrics: ["perfect_match", "adjacent_pair", "kendall_tau"]
+
+# Logging and Checkpoints
+logging:
+  use_wandb: true
+  wandb_project: "visual-narrative-understanding"
+  wandb_entity: ""  # Your wandb username
+  use_tensorboard: true
+  log_interval: 100  # Log every N batches
+  save_interval: 5   # Save checkpoint every N epochs
+  save_best: true    # Save best model based on validation
+
+# Hardware
+device: "cuda"  # or "cpu"
+num_workers: 4  # DataLoader workers
+pin_memory: true
+
+# Random Seed
+seed: 42
+
