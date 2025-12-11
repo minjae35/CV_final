@@ -147,7 +147,6 @@ To analyze the contribution of each training stage, we evaluate models trained a
 
 The infilling generator (61.53% top-1 accuracy) improves upon the InfoNCE baseline (51.58%), demonstrating that the learned infilling approach is more effective than simple average embedding for panel selection. The GAN stage significantly improves performance over the infilling generator alone (61.53% → 84.38%), demonstrating the effectiveness of adversarial training in improving embedding quality. Knowledge distillation provides additional improvement (84.38% → 87.27%), showing that the coherence scores learned from the teacher model contribute to better panel selection.
 
-*Our proposed method*
 
 **Global Task:**
 
@@ -186,7 +185,6 @@ The infilling generator (61.53% top-1 accuracy) improves upon the InfoNCE baseli
 
 On the global task, our full model achieves the best performance (72.00% perfect match, 0.91 Kendall's tau), significantly outperforming InfoNCE (13.00% perfect match, 0.51 Kendall's tau). The global task is more challenging as it requires considering the entire sequence context, and the search algorithm choice (greedy vs. beam search) also affects performance. We use greedy search for all evaluations to ensure fair comparison across different model stages.
 
-*Our proposed method*
 
 ### Component Analysis
 
