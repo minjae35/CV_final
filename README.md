@@ -5,7 +5,7 @@
 Final report and data/checkpoints can be found in the links below.
 
 - **Final Report**: https://drive.google.com/file/d/1igw6PShd0EoCX_SfYdNxvKLrAnlFLE-U/view?usp=sharing
-- **Data & Checkpoints**: [link]
+- **Data & Checkpoints**: https://drive.google.com/drive/folders/1hxXTuW57t9YhfU6eHBB9vgXK9RJiGtU2?usp=sharing
 
 ## Introduction
 
