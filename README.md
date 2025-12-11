@@ -77,7 +77,7 @@ Our full model achieves 87.27% top-1 accuracy, meaning it correctly identifies t
 
 The global task evaluates the model's ability to restore the correct order of a shuffled set of panels. We use greedy search to find the sequence that maximizes the total score across all adjacent triplets.
 
-<table style="width: 60%;">
+<table style="width: 50%;">
 <tr>
 <th>Model (Algorithm)</th>
 <th>Perfect (%)</th>
@@ -151,7 +151,7 @@ The infilling generator (61.53% top-1 accuracy) improves upon the InfoNCE baseli
 
 **Global Task:**
 
-<table style="width: 60%;">
+<table style="width: 50%;">
 <tr>
 <th>Model</th>
 <th>Perfect (%)</th>
